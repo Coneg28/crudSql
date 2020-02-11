@@ -1,5 +1,12 @@
 from tkinter import *
 
+
+import pyodbc 
+conn = pyodbc.connect('Driver={SQL Server Native Client 11.0};'
+                      'Server=COMPLAB503_PC4;'
+                      'Database=db_clothing_line;'
+                      'Trusted_Connection=yes;')
+
 class Product:
     def __init__(self, name, price, description, quantity):
         self.__name = name
@@ -29,17 +36,30 @@ class Product:
 
 
 def addProduct():
+    name = e1.get()
+    description = e2.get()
+    size = e3.get()
+    price = e4.get()
+    cursor = conn.cursor()
+    cursor.execute("INSERT into products (name , description ,size, price , timestamp) values ('"{name','{description}','{size}','{price}',CURRENT_TIMESTAMP)')
+    cursor.commit()
     global products
     product = Product(e1.get(), e2.get(), e3.get(), e4.get())
-    products.append(product)
+    
     viewProducts()
 
 def deleteProduct(product):
+    cursor = conn.cursor()
+    name = e1.get()
+    cursor.execute('DELETE products where name = '+ name )
     global products
     products.remove(product)
     viewProducts()
 
 def updateProduct(product):
+    cursor = conn.cursor()
+    name = e1.get()
+    cursor.execute('UPDATE product set name =' + name  )
     e1.delete(0, 'end')
     e2.delete(0, 'end')
     e3.delete(0, 'end')
