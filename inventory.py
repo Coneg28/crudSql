@@ -26,13 +26,6 @@ class Product:
     def getSize(self):
         return self.__size
  
-    def updateSelf(self, name, price, size):
-        self.__name = name
-        self.__price = price
-        self.__size = size
-        btn1['state'] = DISABLED
-        btn2['state'] = NORMAL
-        viewProducts()
  
  
 def addProduct():
@@ -50,21 +43,24 @@ def deleteProduct(product):
     products.remove(product)
     viewProducts()
  
-def updateProduct(product):
-    cursor = conn.cursor()
-    name = e1.get()
-    cursor.execute('UPDATE product set name =' + name  )
+def updateProduct(id):
+    
     e1.delete(0, 'end')
     e2.delete(0, 'end')
     e3.delete(0, 'end')
-    e1.insert(0,product.getName())
-    e2.insert(0,product.getPrice())
-    e3.insert(0,product.getSize())
+    e4.delete(0, 'end')
+    
     btn1['state'] = NORMAL
     btn2['state'] = DISABLED
-   
-    btn1.configure(command=lambda: product.updateSelf(e1.get(), e2.get(), e3.get()))
-   
+    btn1.configure(command=lambda: updateIt(e1.get(), e2.get(), e3.get(), e4.get(), id))
+
+def updateIt(name, price, size, description, id):
+    cursor = conn.cursor() 
+    cursor.execute("UPDATE products set name = '"+name+"', price = "+price+", size = '"+size+"', description = '"+description+"',timestamp = CURRENT_TIMESTAMP where id =" +str(id) )
+    cursor.commit()
+    btn1['state'] = DISABLED
+    btn2['state'] = NORMAL
+    viewProducts()
  
 def viewProducts():
     row = 1
@@ -82,8 +78,8 @@ def viewProducts():
         Label(separator, text=product[3],background=color, width=10).grid(row=row, column=2, sticky=W+E+N+S , padx=10, pady=5)
         Label(separator, text=product[4],background=color, width=10).grid(row=row, column=3, sticky=W+E+N+S , padx=10, pady=5)
         Label(separator, text=product[5],background=color, width=10).grid(row=row, column=4, sticky=W+E+N+S , padx=10, pady=5)        
-        btn_a1 = Button(separator, text="Update", width=7, command=lambda prod=product: updateProduct(prod))
-        btn_a2 = Button(separator, text="Delete", width=7, command=lambda prod=product: deleteProduct(prod))
+        btn_a1 = Button(separator, text="Update", width=7, command=lambda prod=product: updateProduct([0]))
+        btn_a2 = Button(separator, text="Delete", width=7, command=lambda prod=product: deleteProduct([0]))
  
         btn_a1.grid(row=row, column=5, sticky=W, padx=5, pady=5)
         btn_a2.grid(row=row, column=6, sticky=E, padx=5, pady=5)
