@@ -3,7 +3,7 @@ from tkinter import *
  
 import pyodbc
 conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=NICOLECOLINE;'
+                      'Server=COMPLAB502_PC36;'
                       'Database=db_clothing_line;'
                       'Trusted_Connection=yes;')
  
@@ -31,36 +31,40 @@ class Product:
 def addProduct():
     product = Product(e1.get(), e2.get(), e3.get(), e4.get())
     cursor = conn.cursor()
-    cursor.execute("INSERT into products (name, price ,size, description , timestamp) values ('"+ product.getName() +"',"+ product.getPrice() +",'"+ product.getSize() + "','"+ product.getDescription() +"' ,CURRENT_TIMESTAMP)")
+    cursor.execute("INSERT into products (name, price ,size, description, timestamp) values ('"+ product.getName() +"',"+ product.getPrice() +",'"+ product.getSize() + "','"+ product.getDescription() +"' ,CURRENT_TIMESTAMP)")
     cursor.commit()
     viewProducts()
  
 def deleteProduct(product):
     cursor = conn.cursor()
-    name = e1.get()
-    cursor.execute('DELETE products where name = '+ name )
-    global products
-    products.remove(product)
+    cursor.execute('DELETE products where name = '+ product )
     viewProducts()
  
-def updateProduct(id):
-    
+def updateProduct(product):
     e1.delete(0, 'end')
     e2.delete(0, 'end')
     e3.delete(0, 'end')
     e4.delete(0, 'end')
-    
+    e1.insert(0, product[1])
+    e2.insert(0, product[2])
+    e3.insert(0, product[3])
+    e4.insert(0, product[4])
+   
     btn1['state'] = NORMAL
     btn2['state'] = DISABLED
-    btn1.configure(command=lambda: updateIt(e1.get(), e2.get(), e3.get(), e4.get(), id))
-
+    btn1.configure(command=lambda: updateIt(e1.get(), e2.get(), e3.get(), e4.get(), product[0]))
+ 
 def updateIt(name, price, size, description, id):
-    cursor = conn.cursor() 
-    cursor.execute("UPDATE products set name = '"+name+"', price = "+price+", size = '"+size+"', description = '"+description+"',timestamp = CURRENT_TIMESTAMP where id =" +str(id) )
+    cursor = conn.cursor()
+    cursor.execute("UPDATE products set name = '"+name+"', price = "+price+", size = '"+size+"', description = '"+description+"',timestamp = CURRENT_TIMESTAMP where id =" +str(id))
     cursor.commit()
     btn1['state'] = DISABLED
     btn2['state'] = NORMAL
     viewProducts()
+    Label(root, text="").grid(row=1, column=3, sticky=W, padx=10, pady=5)
+    Label(root, text="").grid(row=2, column=3, sticky=W, padx=10, pady=5)
+    Label(root, text="").grid(row=3, column=3, sticky=W, padx=10, pady=5)
+    Label(root, text="").grid(row=4, column=3, sticky=W, padx=10, pady=5)
  
 def viewProducts():
     row = 1
@@ -70,7 +74,6 @@ def viewProducts():
    
     cursor = conn.cursor()
     cursor.execute("Select * from products")
- 
     addHeaders()
     for product in cursor.fetchall():
         Label(separator, text=product[1], background=color, width=10).grid(row=row, column=0, sticky=W+E+N+S , padx=10, pady=5)
@@ -78,8 +81,8 @@ def viewProducts():
         Label(separator, text=product[3],background=color, width=10).grid(row=row, column=2, sticky=W+E+N+S , padx=10, pady=5)
         Label(separator, text=product[4],background=color, width=10).grid(row=row, column=3, sticky=W+E+N+S , padx=10, pady=5)
         Label(separator, text=product[5],background=color, width=10).grid(row=row, column=4, sticky=W+E+N+S , padx=10, pady=5)        
-        btn_a1 = Button(separator, text="Update", width=7, command=lambda prod=product: updateProduct([0]))
-        btn_a2 = Button(separator, text="Delete", width=7, command=lambda prod=product: deleteProduct([0]))
+        btn_a1 = Button(separator, text="Update", width=7, command=lambda prod=product: updateProduct(product))
+        btn_a2 = Button(separator, text="Delete", width=7, command=lambda prod=product: deleteProduct(product[0]))
  
         btn_a1.grid(row=row, column=5, sticky=W, padx=5, pady=5)
         btn_a2.grid(row=row, column=6, sticky=E, padx=5, pady=5)
