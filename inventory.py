@@ -3,7 +3,7 @@ from tkinter import *
  
 import pyodbc
 conn = pyodbc.connect('Driver={SQL Server};'
-                      'Server=COMPLAB502_PC36;'
+                      'Server=COMPLAB503_PC2;'
                       'Database=db_clothing_line;'
                       'Trusted_Connection=yes;')
  
@@ -101,19 +101,22 @@ def addHeaders():
     Label(separator, text="Timestamp",background=color, width=20).grid(row=0, column=4, sticky=W, padx=10, pady=5)
     Label(separator, text="Action", background=color, width=10).grid(row=0, column=5, sticky=W, padx=10, pady=5, columnspan=2)
  
-products = []
+
 color = "#d9d7d7"
+bgColor = "#031222"
+fgColor = "#f8b4c1"
  
 root = Tk()
 root.title("Simple Inventory System")
-root.geometry("735x600")
+root.geometry("650x600")
 root.resizable(0, 0)
+root.configure(bg = bgColor)
  
-Label(root, text="Products Information").grid(row=0, column=0, sticky=W, padx=10, pady=5)
-Label(root, text="Product Name: ").grid(row=1, column=0, sticky=W, padx=10, pady=5)
-Label(root, text="Product Price: ").grid(row=2, column=0, sticky=W, padx=10, pady=5)
-Label(root, text="Product Size: ").grid(row=3, column=0, sticky=W, padx=10, pady=5)
-Label(root, text="Product Description: ").grid(row=4, column=0, sticky=W, padx=10, pady=5)
+Label(root, text="PRODUCT INFORMATION", bg= bgColor, font = "Century_Gothic 16 bold",fg = fgColor).grid(row=0, column=1, sticky=E, padx=10, pady=5)
+Label(root, text="Product Name: ",  bg= bgColor, font = "Century_Gothic 12 ",fg = fgColor).grid(row=1, column=0, sticky=W, padx=10, pady=5)
+Label(root, text="Product Price: ",  bg= bgColor, font = "Century_Gothic 12 ",fg = fgColor).grid(row=2, column=0, sticky=W, padx=10, pady=5)
+Label(root, text="Product Size: ",  bg= bgColor, font = "Century_Gothic 12 ",fg = fgColor).grid(row=3, column=0, sticky=W, padx=10, pady=5)
+Label(root, text="Product Description: ",  bg= bgColor, font = "Century_Gothic 12 ",fg = fgColor).grid(row=4, column=0, sticky=W, padx=10, pady=5)
  
 e1 = Entry(root, width=45)
 e2 = Entry(root, width=45)
@@ -128,8 +131,8 @@ e4.grid(row=4, column=1, sticky=W, padx=10, pady=5, columnspan=2)
 btn1 = Button(root, text="Update Product", width=15, state=DISABLED)
 btn2 = Button(root, text="Add Product", width=15, state=NORMAL, command=addProduct)
  
-btn1.grid(row=5, column=1, sticky=W, padx=10, pady=5)
-btn2.grid(row=5, column=2, sticky=E, padx=10, pady=5)
+btn1.grid(row=5, column=1, sticky=W, pady=5)
+btn2.grid(row=5, column=1, sticky=E,  pady=5)
  
 separator = Canvas(root, height=100, width=420, background=color, relief=SUNKEN)
 addHeaders()
